@@ -1,0 +1,17 @@
+Steps: 601
+Direction: left
+Player position: 3,1
+Visited cells: 65
+Goals: 10
+Player data: {'class': 'AdvancedPlayer', 'x': 7, 'y': 4, 'name': 'Hero', 'score': 6010, 'moves': 0, 'direction': 'down'}
+Level:
+############
+#$$@ #     ###
+#$$  #       #
+#$$  # ####  #
+#$$      ##  #
+#$$  # #    ##
+###### ##    #
+  #          #
+  #    #     #
+  ############
