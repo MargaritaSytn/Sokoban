@@ -2,20 +2,20 @@ from tkinter import Tk, Label, Entry, Button, messagebox, Toplevel
 from database import login_user, register_user
 
 class LoginWindow:
-    """Окно входа и регистрации"""
+    """Вікно входу та реєстрації"""
     def __init__(self):
         self.result = None
         self.user_id = None
         self.username = None
         
     def show_login(self):
-        """Показать окно входа"""
+        """Показати вікно входу"""
         root = Tk()
-        root.title("Вход в Sokoban")
+        root.title("Вхід у Sokoban")
         root.geometry("300x200")
         root.resizable(False, False)
         
-        Label(root, text="Логин:").pack(pady=5)
+        Label(root, text="Логін:").pack(pady=5)
         entry_user = Entry(root)
         entry_user.pack(pady=5)
         
@@ -33,14 +33,14 @@ class LoginWindow:
                 self.username = username
                 root.destroy()
             else:
-                messagebox.showerror("Ошибка", "Неверный логин или пароль!")
+                messagebox.showerror("Помилка", "Невірний логін або пароль!")
         
         def on_register():
             reg_window = Toplevel(root)
-            reg_window.title("Регистрация")
+            reg_window.title("Реєстрація")
             reg_window.geometry("300x200")
             
-            Label(reg_window, text="Логин:").pack(pady=5)
+            Label(reg_window, text="Логін:").pack(pady=5)
             reg_user = Entry(reg_window)
             reg_user.pack(pady=5)
             
@@ -52,19 +52,19 @@ class LoginWindow:
                 username = reg_user.get()
                 password = reg_pass.get()
                 if len(username) < 3 or len(password) < 3:
-                    messagebox.showerror("Ошибка", "Логин и пароль должны быть минимум 3 символа!")
+                    messagebox.showerror("Помилка", "Логін та пароль мають бути мінімум 3 символи!")
                     return
                 success, message = register_user(username, password)
                 if success:
-                    messagebox.showinfo("Успех", message)
+                    messagebox.showinfo("Успіх", message)
                     reg_window.destroy()
                 else:
-                    messagebox.showerror("Ошибка", message)
+                    messagebox.showerror("Помилка", message)
             
-            Button(reg_window, text="Зарегистрироваться", command=do_register).pack(pady=10)
+            Button(reg_window, text="Зареєструватися", command=do_register).pack(pady=10)
         
-        Button(root, text="Войти", command=on_login).pack(pady=5)
-        Button(root, text="Регистрация", command=on_register).pack(pady=5)
+        Button(root, text="Увійти", command=on_login).pack(pady=5)
+        Button(root, text="Реєстрація", command=on_register).pack(pady=5)
         
         root.mainloop()
         return self.result, self.user_id, self.username

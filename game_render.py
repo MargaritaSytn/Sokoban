@@ -2,7 +2,7 @@ import pygame
 from database import get_leaderboard
 
 class GameRenderer:
-    """Класс для отрисовки игры"""
+    """Клас для відмальовування гри"""
     def __init__(self, screen, tile_size):
         self.screen = screen
         self.TILE_SIZE = tile_size
@@ -27,7 +27,7 @@ class GameRenderer:
         self.goal_img = self.load_img("images/enviroment/environment_02.png")
     
     def load_img(self, path):
-        """Загрузка изображения"""
+        """Завантаження зображення"""
         try:
             return pygame.image.load(path).convert_alpha()
         except:
@@ -36,33 +36,33 @@ class GameRenderer:
             return surf
     
     def draw_menu(self, username):
-        """Отрисовка главного меню"""
+        """Відмальовування головного меню"""
         self.screen.fill((50, 50, 50))
         
         title = self.font_big.render("SOKOBAN", True, (255, 255, 255))
         self.screen.blit(title, (self.SCREEN_WIDTH//2 - title.get_width()//2, 50))
         
-        user_text = self.font_small.render(f"Игрок: {username}", True, (200, 200, 200))
+        user_text = self.font_small.render(f"Гравець: {username}", True, (200, 200, 200))
         self.screen.blit(user_text, (self.SCREEN_WIDTH//2 - user_text.get_width()//2, 130))
         
-        for i, txt in enumerate(["Играть", "Уровни", "Лидеры", "Выход"]):
+        for i, txt in enumerate(["Грати", "Рівні", "Лідери", "Вихід"]):
             rect = pygame.Rect(300, 200 + i*80, 200, 60)
             pygame.draw.rect(self.screen, (200, 200, 200), rect, border_radius=10)
             st = self.font_small.render(txt, True, (0, 0, 0))
             self.screen.blit(st, (rect.centerx - st.get_width()//2, rect.centery - st.get_height()//2))
     
     def draw_levels_menu(self, levels_count):
-        """Отрисовка меню выбора уровней"""
+        """Відмальовування меню вибору рівнів"""
         self.screen.fill((50, 50, 50))
         
-        title = self.font_big.render("ВЫБОР УРОВНЯ", True, (255, 255, 255))
+        title = self.font_big.render("ВИБІР РІВНЯ", True, (255, 255, 255))
         self.screen.blit(title, (self.SCREEN_WIDTH//2 - title.get_width()//2, 60))
 
         # Move level entries further down for better spacing under the title
         for i in range(levels_count):
             rect = pygame.Rect(300, 180 + i * 70, 200, 50)
             pygame.draw.rect(self.screen, (200, 200, 200), rect, border_radius=10)
-            st = self.font_small.render(f"Уровень {i+1}", True, (0, 0, 0))
+            st = self.font_small.render(f"Рівень {i+1}", True, (0, 0, 0))
             self.screen.blit(st, (rect.centerx - st.get_width()//2, rect.centery - st.get_height()//2))
         
         back_btn = pygame.Rect(20, 20, 100, 40)
@@ -71,7 +71,7 @@ class GameRenderer:
         self.screen.blit(back_text, (back_btn.centerx - back_text.get_width()//2, back_btn.centery - back_text.get_height()//2))
     
     def draw_preview(self, game_logic, level_index):
-        """Отрисовка превью уровня"""
+        """Відмальовування прев'ю рівня"""
         self.screen.fill((30, 30, 30))
         
         back_btn = pygame.Rect(20, 20, 100, 40)
@@ -79,7 +79,7 @@ class GameRenderer:
         back_text = self.font.render("Назад", True, (0, 0, 0))
         self.screen.blit(back_text, (back_btn.centerx - back_text.get_width()//2, back_btn.centery - back_text.get_height()//2))
         
-        title = self.font_big.render(f"Уровень {level_index + 1}", True, (255, 255, 255))
+        title = self.font_big.render(f"Рівень {level_index + 1}", True, (255, 255, 255))
         self.screen.blit(title, (self.SCREEN_WIDTH // 2 - title.get_width() // 2, 20))
         
         map_height = len(game_logic.level)
@@ -119,11 +119,11 @@ class GameRenderer:
         
         btn_start = pygame.Rect(self.SCREEN_WIDTH // 2 - 100, self.SCREEN_HEIGHT - 80, 200, 50)
         pygame.draw.rect(self.screen, (50, 150, 50), btn_start, border_radius=10)
-        start_text = self.font.render("Начать", True, (255, 255, 255))
+        start_text = self.font.render("Почати", True, (255, 255, 255))
         self.screen.blit(start_text, (btn_start.centerx - start_text.get_width()//2, btn_start.centery - start_text.get_height()//2))
     
     def draw_game(self, game_logic, level_index, deadlocks=None, show_stats=False, global_stats=None):
-        """Отрисовка игрового процесса"""
+        """Відмальовування ігрового процесу"""
         self.screen.fill((40, 40, 40))
         
         cam_x = game_logic.player_x * self.TILE_SIZE - self.SCREEN_WIDTH // 2 + self.TILE_SIZE // 2
@@ -148,7 +148,7 @@ class GameRenderer:
         # Make info box slightly larger so steps value fits reliably
         info_box_w, info_box_h = 310, 40
         pygame.draw.rect(self.screen, (70, 70, 70), (10, 10, info_box_w, info_box_h), border_radius=6)
-        info = self.font.render(f"Уровень {level_index + 1} | Шаги: {game_logic.steps_count}", True, (255, 255, 255))
+        info = self.font.render(f"Рівень {level_index + 1} | Кроків: {game_logic.steps_count}", True, (255, 255, 255))
         # vertically center the text inside the larger box
         self.screen.blit(info, (15, 10 + (info_box_h - info.get_height()) // 2))
         
@@ -164,7 +164,7 @@ class GameRenderer:
         # Deadlock visualization removed per request
     
     def draw_control_buttons(self, game_logic):
-        """Отрисовка кнопок управления"""
+        """Відмальовування кнопок керування"""
         btn_undo = pygame.Rect(10, 60, 80, 35)
         btn_redo = pygame.Rect(100, 60, 80, 35)
         btn_reset = pygame.Rect(10, 105, 80, 35)
@@ -189,12 +189,12 @@ class GameRenderer:
         self.screen.blit(exit_text, (btn_exit.centerx - exit_text.get_width()//2, btn_exit.centery - exit_text.get_height()//2))
     
     def draw_key_hints(self):
-        """Подсказки по клавишам"""
+        """Підказки по клавішах"""
         hints = [
             "M - Карта",
             "I - Статистика",
-            "F5 - Сохранить",
-            "F9 - Загрузить"
+            "F5 - Зберегти",
+            "F9 - Завантажити"
         ]
         
         y_start = self.SCREEN_HEIGHT - 120
@@ -203,7 +203,7 @@ class GameRenderer:
             self.screen.blit(text, (10, y_start + i * 20))
     
     def draw_statistics_overlay(self, game_logic, global_stats):
-        """Оверлей со статистикой"""
+        """Оверлей зі статистикою"""
         # Shrink overlay so it doesn't leave half-empty space and fill with text
         overlay_w, overlay_h = 360, 180
         overlay = pygame.Surface((overlay_w, overlay_h))
@@ -227,9 +227,9 @@ class GameRenderer:
 
         y_offset = overlay_y + 44
         stats_lines = [
-            f"Шагов сделано: {steps}",
-            f"Ящиков всего: {boxes_total}",
-            f"Ящиков на месте: {boxes_on_goals}"
+            f"Кроків зроблено: {steps}",
+            f"Ящиків всього: {boxes_total}",
+            f"Ящиків на місці: {boxes_on_goals}"
         ]
 
         for line in stats_lines:
@@ -238,14 +238,14 @@ class GameRenderer:
             y_offset += 30
 
         # Hint placed below text to avoid overlap
-        hint = self.font_mini.render("Нажмите I чтобы закрыть", True, (150, 150, 150))
+        hint = self.font_mini.render("Натисніть I щоб закрити", True, (150, 150, 150))
         self.screen.blit(hint, (self.SCREEN_WIDTH // 2 - hint.get_width() // 2, overlay_y + overlay_h - 28))
     
     def draw_full_map(self, game_logic, level_index):
-        """Полноэкранная карта (клавиша M)"""
+        """Повноекранна карта (клавіша M)"""
         self.screen.fill((20, 20, 30))
         
-        title = self.font_big.render(f"КАРТА УРОВНЯ {level_index + 1}", True, (255, 255, 255))
+        title = self.font_big.render(f"КАРТА РІВНЯ {level_index + 1}", True, (255, 255, 255))
         self.screen.blit(title, (self.SCREEN_WIDTH // 2 - title.get_width() // 2, 20))
         
         map_height = len(game_logic.level)
@@ -287,13 +287,13 @@ class GameRenderer:
                 
                 # visited overlay removed per request (no blue visited cells)
         
-        hint = self.font_small.render("Нажмите M чтобы закрыть карту", True, (200, 200, 200))
+        hint = self.font_small.render("Натисніть M щоб закрити карту", True, (200, 200, 200))
         self.screen.blit(hint, (self.SCREEN_WIDTH // 2 - hint.get_width() // 2, self.SCREEN_HEIGHT - 50))
         
         # Legend & visited-count removed per request
     
     def draw_minimap(self, game_logic):
-        """Отрисовка мини-карты"""
+        """Відмальовування міні-карти"""
         map_height = len(game_logic.level)
         map_width = max(len(row) for row in game_logic.level) if game_logic.level else 0
         minimap_max_size = 150
@@ -323,28 +323,28 @@ class GameRenderer:
                     pygame.draw.rect(self.screen, (50, 50, 150), (px, py, mini_tile_size, mini_tile_size))
     
     def draw_leaderboard(self, levels_count):
-        """Отрисовка таблицы лидеров"""
+        """Відмальовування таблиці лідерів"""
         self.screen.fill((30, 30, 50))
         
-        title = self.font_big.render("ТАБЛИЦА ЛИДЕРОВ", True, (255, 255, 255))
+        title = self.font_big.render("ТАБЛИЦЯ ЛІДЕРІВ", True, (255, 255, 255))
         # Move title down so it doesn't overlap the back button
         self.screen.blit(title, (self.SCREEN_WIDTH//2 - title.get_width()//2, 60))
 
         # Start listing leaderboard entries below the title
         y_offset = 140
         for level_num in range(1, levels_count + 1):
-            level_title = self.font.render(f"Уровень {level_num}:", True, (255, 200, 100))
+            level_title = self.font.render(f"Рівень {level_num}:", True, (255, 200, 100))
             self.screen.blit(level_title, (50, y_offset))
             y_offset += 40
             
             leaderboard = get_leaderboard(level_num)
             if leaderboard:
                 for idx, (username, steps) in enumerate(leaderboard[:3], 1):
-                    entry_text = self.font_tiny.render(f"{idx}. {username} - {steps} шагов", True, (200, 200, 200))
+                    entry_text = self.font_tiny.render(f"{idx}. {username} - {steps} кроків", True, (200, 200, 200))
                     self.screen.blit(entry_text, (70, y_offset))
                     y_offset += 22
             else:
-                no_data = self.font_tiny.render("Нет данных", True, (150, 150, 150))
+                no_data = self.font_tiny.render("Немає даних", True, (150, 150, 150))
                 self.screen.blit(no_data, (70, y_offset))
                 y_offset += 22
             
@@ -356,23 +356,23 @@ class GameRenderer:
         self.screen.blit(back_text, (back_btn.centerx - back_text.get_width()//2, back_btn.centery - back_text.get_height()//2))
     
     def draw_win_screen(self, level_index, levels_count, steps, has_user):
-        """Отрисовка экрана победы"""
+        """Відмальовування екрана перемоги"""
         self.screen.fill((20, 20, 20))
         
-        msg = "УРОВЕНЬ ПРОЙДЕН!"
+        msg = "РІВЕНЬ ПРОЙДЕНО!"
         win_t = self.font_big.render(msg, True, (0, 255, 0))
         self.screen.blit(win_t, (self.SCREEN_WIDTH // 2 - win_t.get_width() // 2, 150))
         
-        steps_text = self.font.render(f"Шагов: {steps}", True, (255, 255, 255))
+        steps_text = self.font.render(f"Кроків: {steps}", True, (255, 255, 255))
         self.screen.blit(steps_text, (self.SCREEN_WIDTH // 2 - steps_text.get_width() // 2, 250))
         
         if has_user:
-            saved_text = self.font_small.render("Результат сохранён!", True, (100, 255, 100))
+            saved_text = self.font_small.render("Результат збережено!", True, (100, 255, 100))
             self.screen.blit(saved_text, (self.SCREEN_WIDTH // 2 - saved_text.get_width() // 2, 290))
         
         btn_next = pygame.Rect(250, 350, 300, 60)
         pygame.draw.rect(self.screen, (50, 180, 50), btn_next, border_radius=10)
-        next_text = "Следующий уровень" if level_index < levels_count - 1 else "Завершить"
+        next_text = "Наступний рівень" if level_index < levels_count - 1 else "Завершити"
         t_next = self.font.render(next_text, True, (255, 255, 255))
         self.screen.blit(t_next, (btn_next.centerx - t_next.get_width()//2, btn_next.centery - t_next.get_height()//2))
         

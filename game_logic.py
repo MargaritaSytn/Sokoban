@@ -8,8 +8,15 @@ from game_entities import (
 total_games_played = 0
 total_steps_made = 0
 
+def log_call(func):
+    def wrapper(*args, **kwargs):
+        print(f"[LOG] Виклик: {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+
 class GameLogic:
-    """Класс для управления игровой логикой"""
+    """Клас для керування ігровою логікою"""
+    
     def __init__(self):
         self.level = []
         self.goals = set() 
@@ -27,13 +34,13 @@ class GameLogic:
         self.walls = GameObjectCollection()  
     
     def __str__(self):
-        return f"GameLogic(steps={self.steps_count}, player=({self.player_x}, {self.player_y}))"
+        return f"GameLogic(кроків={self.steps_count}, гравець=({self.player_x}, {self.player_y}))"
     
     def __repr__(self):
-        return f"GameLogic(steps={self.steps_count}, boxes={len(self.boxes)}, goals={len(self.goals)})"
+        return f"GameLogic(кроків={self.steps_count}, ящиків={len(self.boxes)}, цілей={len(self.goals)})"
     
     def load_level_data(self, filename):
-        """Загрузка уровня из файла"""
+        """Завантаження рівня з файлу"""
         path = f"levels/{filename}"
         if not os.path.exists(path):
             return [["#"]*15 for _ in range(15)]
@@ -41,7 +48,7 @@ class GameLogic:
             return [list(line.rstrip("\n")) for line in f]
     
     def save_state(self):
-        """Сохранение текущего состояния в историю"""
+        """Збереження поточного стану в історію"""
         state = {
             "level": [row[:] for row in self.level],
             "player_pos": (self.player_x, self.player_y),
@@ -53,7 +60,7 @@ class GameLogic:
         self.history_index += 1
     
     def undo(self):
-        """Откат на шаг назад"""
+        """Відкат на крок назад"""
         if self.history_index > 0:
             self.history_index -= 1
             state = self.history[self.history_index]
@@ -68,7 +75,7 @@ class GameLogic:
                 self.player_obj.direction = self.current_direction
     
     def redo(self):
-        """Откат вперёд"""
+        """Відкат уперед"""
         if self.history_index < len(self.history) - 1:
             self.history_index += 1
             state = self.history[self.history_index]
@@ -83,7 +90,7 @@ class GameLogic:
                 self.player_obj.direction = self.current_direction
     
     def reset_level(self, level_filename):
-        """Сброс уровня"""
+        """Скидання рівня"""
         global total_games_played 
         total_games_played += 1
         
@@ -103,7 +110,7 @@ class GameLogic:
             for x, ch in enumerate(row):
                 if ch == "@":
                     self.player_x, self.player_y = x, y
-                    self.player_obj = AdvancedPlayer(x, y, "Hero")
+                    self.player_obj = AdvancedPlayer(x, y, "Герой")
                     self.visited_positions.add((x, y))
                 elif ch == "$":
                     box = AdvancedBox(x, y, weight=1)
@@ -116,8 +123,9 @@ class GameLogic:
                     self.walls.add(wall)
         
         self.save_state()
-    
-    def move_player(self, dx, dy, direction):
+
+    @log_call
+    def move_player(self, dx: int, dy: int, direction: str) -> None:
         """Переміщення гравця (Основне завдання)"""
         global total_steps_made
         self.current_direction = direction
@@ -125,9 +133,11 @@ class GameLogic:
         nx, ny = self.player_x + dx, self.player_y + dy
         nnx, nny = self.player_x + 2 * dx, self.player_y + 2 * dy
 
-        if not (0 <= ny < len(self.level) and 0 <= nx < len(self.level[ny])):
+        if 0 <= ny < len(self.level) and 0 <= nx < len(self.level[ny]):
+            pass
+        else:
             return
-        
+   
         target = self.level[ny][nx]
         if target == "#": 
             return
@@ -160,11 +170,16 @@ class GameLogic:
                 self.player_obj += 10
             self.save_state()
     
-    def get_level_statistics(self, *, show_details=True, max_steps=1000):
+    def get_level_statistics(
+        self,
+        *,
+        show_details: bool = True,
+        max_steps: int = 1000
+    ) -> dict:
         """
-        Получение статистики уровня
+        Отримання статистики рівня
         4a. optional (keyword) parameters
-        4b. * в параметрах (keyword-only)
+        4b. * у параметрах (keyword-only)
         """
         stats = {
             "boxes_count": len(self.boxes), 
@@ -179,11 +194,11 @@ class GameLogic:
             stats["player_name"] = self.player_obj.name
         
         def calculate_efficiency():
-            """Вложенная функция для расчета эффективности"""
+            """Вкладена функція для розрахунку ефективності"""
             efficiency_score = 0
             
             def update_score(points):
-                """Еще одна вложенная функция"""
+                """Ще одна вкладена функція"""
                 nonlocal efficiency_score 
                 efficiency_score += points
             
@@ -199,17 +214,24 @@ class GameLogic:
         
         return stats
     
-    def validate_level_bounds(self, x, y, /, width, height):
+    def validate_level_bounds(
+        self,
+        x: int,
+        y: int,
+        /,
+        width: int,
+        height: int
+    ) -> bool:
         """
-        Проверка границ уровня
-        4b. / в параметрах (positional-only)
+        Перевірка меж рівня
+        4b. / у параметрах (positional-only)
         """
         return 0 <= x < width and 0 <= y < height
     
     def find_deadlocks(self):
         """
-        Поиск тупиковых ситуаций (ящик в углу без цели)
-        Использует: 3d. continue, 3e. break, 3f. else в цикле
+        Пошук тупикових ситуацій (ящик у куті без цілі)
+        Використовує: 3d. continue, 3e. break, 3f. else у циклі
         """
         deadlocked_boxes = []
         
@@ -242,35 +264,35 @@ class GameLogic:
         
         return deadlocked_boxes
     
-    def check_win(self):
-        """Проверка победы"""
+    def check_win(self) -> bool:
+        """Перевірка перемоги"""
         boxes_positions = {(x, y) for y, row in enumerate(self.level) for x, tile in enumerate(row) if tile == "$"}
         return boxes_positions == self.goals
     
     def save_progress_to_text(self, filename="progress.txt"):
-        """Сохранение прогресса в текстовый файл"""
+        """Збереження прогресу в текстовий файл"""
         with open(filename, "w", encoding="utf-8") as f:
-            f.write(f"Steps: {self.steps_count}\n")
-            f.write(f"Direction: {self.current_direction}\n")
-            f.write(f"Player position: {self.player_x},{self.player_y}\n")
-            f.write(f"Visited cells: {len(self.visited_positions)}\n")
-            f.write(f"Goals: {len(self.goals)}\n")
+            f.write(f"Кроків: {self.steps_count}\n")
+            f.write(f"Напрямок: {self.current_direction}\n")
+            f.write(f"Позиція гравця: {self.player_x},{self.player_y}\n")
+            f.write(f"Відвідано клітин: {len(self.visited_positions)}\n")
+            f.write(f"Цілей: {len(self.goals)}\n")
             
             if self.player_obj:
-                f.write(f"Player data: {self.player_obj.to_dict()}\n")
+                f.write(f"Дані гравця: {self.player_obj.to_dict()}\n")
             
-            f.write("Level:\n")
+            f.write("Рівень:\n")
             for row in self.level:
                 f.write("".join(row) + "\n")
     
     def export_level_to_text(self, filename):
-        """Экспорт уровня в текстовый файл"""
+        """Експорт рівня в текстовий файл"""
         with open(filename, "w", encoding="utf-8") as f:
             for row in self.level:
                 f.write("".join(row) + "\n")
     
     def save_state_to_binary(self, filename="gamestate.bin"):
-        """Сохранение полного состояния игры в бинарный файл"""
+        """Збереження повного стану гри в бінарний файл"""
         state = {
             "level": self.level,
             "goals": self.goals,
@@ -287,7 +309,7 @@ class GameLogic:
             pickle.dump(state, f)
     
     def load_state_from_binary(self, filename="gamestate.bin"):
-        """Загрузка состояния игры из бинарного файла"""
+        """Завантаження стану гри з бінарного файлу"""
         if not os.path.exists(filename):
             return False
         try:
@@ -308,7 +330,7 @@ class GameLogic:
                 self.player_obj = AdvancedPlayer(
                     player_data['x'], 
                     player_data['y'],
-                    player_data.get('name', 'Hero')
+                    player_data.get('name', 'Герой')
                 )
                 self.player_obj._score = player_data.get('score', 0)
                 self.player_obj._moves_count = player_data.get('moves', 0)
@@ -319,16 +341,19 @@ class GameLogic:
             return False
     
     def get_sorted_boxes(self):
-        """Получить отсортированный список ящиков"""
-        return self.boxes.sort_by_position()
+        """Отримати відсортований список ящиків"""
+        return sorted(
+            (box for box in self.boxes.iter_objects()),
+            key=lambda b: (b.y, b.x)
+        )
     
     def print_player_info(self):
-        """Вывести информацию об игроке (использует __str__)"""
+        """Вивести інформацію про гравця (використовує __str__)"""
         if self.player_obj:
             print(self.player_obj) 
 
 def get_global_statistics():
-    """Получение глобальной статистики"""
+    """Отримання глобальної статистики"""
     global total_games_played, total_steps_made
     return {
         "games_played": total_games_played,
@@ -337,7 +362,7 @@ def get_global_statistics():
     }
 
 def reset_global_statistics():
-    """Сброс глобальной статистики"""
+    """Скидання глобальної статистики"""
     global total_games_played, total_steps_made
     total_games_played = 0
     total_steps_made = 0
