@@ -37,49 +37,48 @@ class GameRenderer:
     
     def draw_menu(self, username):
         """Відмальовування головного меню"""
-        self.screen.fill((50, 50, 50))
+        self.screen.fill((40, 20, 20))
         
-        title = self.font_big.render("SOKOBAN", True, (255, 255, 255))
+        title = self.font_big.render("SOKOBAN", True, (255, 200, 200))
         self.screen.blit(title, (self.SCREEN_WIDTH//2 - title.get_width()//2, 50))
         
-        user_text = self.font_small.render(f"Гравець: {username}", True, (200, 200, 200))
+        user_text = self.font_small.render(f"Гравець: {username}", True, (255, 180, 180))
         self.screen.blit(user_text, (self.SCREEN_WIDTH//2 - user_text.get_width()//2, 130))
         
         for i, txt in enumerate(["Грати", "Рівні", "Лідери", "Вихід"]):
             rect = pygame.Rect(300, 200 + i*80, 200, 60)
-            pygame.draw.rect(self.screen, (200, 200, 200), rect, border_radius=10)
-            st = self.font_small.render(txt, True, (0, 0, 0))
+            pygame.draw.rect(self.screen, (180, 60, 60), rect, border_radius=10)
+            st = self.font_small.render(txt, True, (255, 240, 240))
             self.screen.blit(st, (rect.centerx - st.get_width()//2, rect.centery - st.get_height()//2))
     
     def draw_levels_menu(self, levels_count):
         """Відмальовування меню вибору рівнів"""
-        self.screen.fill((50, 50, 50))
+        self.screen.fill((40, 20, 20))
         
-        title = self.font_big.render("ВИБІР РІВНЯ", True, (255, 255, 255))
+        title = self.font_big.render("ВИБІР РІВНЯ", True, (255, 200, 200))
         self.screen.blit(title, (self.SCREEN_WIDTH//2 - title.get_width()//2, 60))
 
-        # Move level entries further down for better spacing under the title
         for i in range(levels_count):
             rect = pygame.Rect(300, 180 + i * 70, 200, 50)
-            pygame.draw.rect(self.screen, (200, 200, 200), rect, border_radius=10)
-            st = self.font_small.render(f"Рівень {i+1}", True, (0, 0, 0))
+            pygame.draw.rect(self.screen, (180, 60, 60), rect, border_radius=10)
+            st = self.font_small.render(f"Рівень {i+1}", True, (255, 240, 240))
             self.screen.blit(st, (rect.centerx - st.get_width()//2, rect.centery - st.get_height()//2))
         
         back_btn = pygame.Rect(20, 20, 100, 40)
-        pygame.draw.rect(self.screen, (150, 150, 150), back_btn, border_radius=5)
-        back_text = self.font.render("Назад", True, (0, 0, 0))
+        pygame.draw.rect(self.screen, (140, 50, 50), back_btn, border_radius=5)
+        back_text = self.font.render("Назад", True, (255, 240, 240))
         self.screen.blit(back_text, (back_btn.centerx - back_text.get_width()//2, back_btn.centery - back_text.get_height()//2))
     
     def draw_preview(self, game_logic, level_index):
         """Відмальовування прев'ю рівня"""
-        self.screen.fill((30, 30, 30))
+        self.screen.fill((30, 15, 15))
         
         back_btn = pygame.Rect(20, 20, 100, 40)
-        pygame.draw.rect(self.screen, (150, 150, 150), back_btn, border_radius=5)
-        back_text = self.font.render("Назад", True, (0, 0, 0))
+        pygame.draw.rect(self.screen, (140, 50, 50), back_btn, border_radius=5)
+        back_text = self.font.render("Назад", True, (255, 240, 240))
         self.screen.blit(back_text, (back_btn.centerx - back_text.get_width()//2, back_btn.centery - back_text.get_height()//2))
         
-        title = self.font_big.render(f"Рівень {level_index + 1}", True, (255, 255, 255))
+        title = self.font_big.render(f"Рівень {level_index + 1}", True, (255, 200, 200))
         self.screen.blit(title, (self.SCREEN_WIDTH // 2 - title.get_width() // 2, 20))
         
         map_height = len(game_logic.level)
@@ -118,13 +117,13 @@ class GameRenderer:
                         self.screen.blit(player_scaled, (px, py))
         
         btn_start = pygame.Rect(self.SCREEN_WIDTH // 2 - 100, self.SCREEN_HEIGHT - 80, 200, 50)
-        pygame.draw.rect(self.screen, (50, 150, 50), btn_start, border_radius=10)
-        start_text = self.font.render("Почати", True, (255, 255, 255))
+        pygame.draw.rect(self.screen, (160, 50, 50), btn_start, border_radius=10)
+        start_text = self.font.render("Почати", True, (255, 240, 240))
         self.screen.blit(start_text, (btn_start.centerx - start_text.get_width()//2, btn_start.centery - start_text.get_height()//2))
     
     def draw_game(self, game_logic, level_index, deadlocks=None, show_stats=False, global_stats=None):
         """Відмальовування ігрового процесу"""
-        self.screen.fill((40, 40, 40))
+        self.screen.fill((35, 20, 20))
         
         cam_x = game_logic.player_x * self.TILE_SIZE - self.SCREEN_WIDTH // 2 + self.TILE_SIZE // 2
         cam_y = game_logic.player_y * self.TILE_SIZE - self.SCREEN_HEIGHT // 2 + self.TILE_SIZE // 2
@@ -145,11 +144,9 @@ class GameRenderer:
                     elif tile == "@": 
                         self.screen.blit(self.player_sprites[game_logic.current_direction], (draw_x, draw_y))
 
-        # Make info box slightly larger so steps value fits reliably
         info_box_w, info_box_h = 310, 40
-        pygame.draw.rect(self.screen, (70, 70, 70), (10, 10, info_box_w, info_box_h), border_radius=6)
-        info = self.font.render(f"Рівень {level_index + 1} | Кроків: {game_logic.steps_count}", True, (255, 255, 255))
-        # vertically center the text inside the larger box
+        pygame.draw.rect(self.screen, (80, 40, 40), (10, 10, info_box_w, info_box_h), border_radius=6)
+        info = self.font.render(f"Рівень {level_index + 1} | Кроків: {game_logic.steps_count}", True, (255, 220, 220))
         self.screen.blit(info, (15, 10 + (info_box_h - info.get_height()) // 2))
         
         self.draw_control_buttons(game_logic)
@@ -160,8 +157,6 @@ class GameRenderer:
         
         if show_stats:
             self.draw_statistics_overlay(game_logic, global_stats)
-        
-        # Deadlock visualization removed per request
     
     def draw_control_buttons(self, game_logic):
         """Відмальовування кнопок керування"""
@@ -170,24 +165,27 @@ class GameRenderer:
         btn_reset = pygame.Rect(10, 105, 80, 35)
         btn_exit = pygame.Rect(100, 105, 80, 35)
         
-        color_undo = (100, 150, 100) if game_logic.history_index > 0 else (60, 60, 60)
+        # Undo - зелений (назад у часі - безпечно)
+        color_undo = (60, 140, 60) if game_logic.history_index > 0 else (40, 60, 40)
         pygame.draw.rect(self.screen, color_undo, btn_undo, border_radius=5)
-        undo_text = self.font_small.render("Undo", True, (255, 255, 255))
+        undo_text = self.font_small.render("Undo", True, (240, 255, 240))
         self.screen.blit(undo_text, (btn_undo.centerx - undo_text.get_width()//2, btn_undo.centery - undo_text.get_height()//2))
         
-        color_redo = (100, 150, 100) if game_logic.history_index < len(game_logic.history) - 1 else (60, 60, 60)
+        # Redo - синій (вперед у часі)
+        color_redo = (60, 100, 160) if game_logic.history_index < len(game_logic.history) - 1 else (30, 50, 70)
         pygame.draw.rect(self.screen, color_redo, btn_redo, border_radius=5)
-        redo_text = self.font_small.render("Redo", True, (255, 255, 255))
+        redo_text = self.font_small.render("Redo", True, (240, 245, 255))
         self.screen.blit(redo_text, (btn_redo.centerx - redo_text.get_width()//2, btn_redo.centery - redo_text.get_height()//2))
         
-        pygame.draw.rect(self.screen, (150, 100, 100), btn_reset, border_radius=5)
-        reset_text = self.font_small.render("Reset", True, (255, 255, 255))
+        # Reset - помаранчевий (попередження)
+        pygame.draw.rect(self.screen, (200, 120, 40), btn_reset, border_radius=5)
+        reset_text = self.font_small.render("Reset", True, (255, 250, 240))
         self.screen.blit(reset_text, (btn_reset.centerx - reset_text.get_width()//2, btn_reset.centery - reset_text.get_height()//2))
         
-        pygame.draw.rect(self.screen, (100, 100, 150), btn_exit, border_radius=5)
-        exit_text = self.font_small.render("Exit", True, (255, 255, 255))
+        # Exit - червоний (вихід)
+        pygame.draw.rect(self.screen, (180, 50, 50), btn_exit, border_radius=5)
+        exit_text = self.font_small.render("Exit", True, (255, 240, 240))
         self.screen.blit(exit_text, (btn_exit.centerx - exit_text.get_width()//2, btn_exit.centery - exit_text.get_height()//2))
-    
     def draw_key_hints(self):
         """Підказки по клавішах"""
         hints = [
@@ -199,24 +197,22 @@ class GameRenderer:
         
         y_start = self.SCREEN_HEIGHT - 120
         for i, hint in enumerate(hints):
-            text = self.font_mini.render(hint, True, (180, 180, 180))
+            text = self.font_mini.render(hint, True, (255, 180, 180))
             self.screen.blit(text, (10, y_start + i * 20))
     
     def draw_statistics_overlay(self, game_logic, global_stats):
         """Оверлей зі статистикою"""
-        # Shrink overlay so it doesn't leave half-empty space and fill with text
         overlay_w, overlay_h = 360, 180
         overlay = pygame.Surface((overlay_w, overlay_h))
         overlay.set_alpha(230)
-        overlay.fill((40, 40, 60))
+        overlay.fill((50, 25, 25))
         overlay_x = self.SCREEN_WIDTH // 2 - overlay_w // 2
         overlay_y = self.SCREEN_HEIGHT // 2 - overlay_h // 2
         self.screen.blit(overlay, (overlay_x, overlay_y))
 
-        title = self.font.render("СТАТИСТИКА", True, (255, 255, 100))
+        title = self.font.render("СТАТИСТИКА", True, (255, 200, 100))
         self.screen.blit(title, (self.SCREEN_WIDTH // 2 - title.get_width() // 2, overlay_y + 8))
 
-        # Show only requested stats: steps, total boxes, boxes on goals
         steps = game_logic.steps_count
         boxes_total = sum(1 for row in game_logic.level for t in row if t in ["$", "*"])
         boxes_on_goals = 0
@@ -233,19 +229,18 @@ class GameRenderer:
         ]
 
         for line in stats_lines:
-            text = self.font_tiny.render(line, True, (255, 255, 255))
+            text = self.font_tiny.render(line, True, (255, 230, 230))
             self.screen.blit(text, (overlay_x + 16, y_offset))
             y_offset += 30
 
-        # Hint placed below text to avoid overlap
-        hint = self.font_mini.render("Натисніть I щоб закрити", True, (150, 150, 150))
+        hint = self.font_mini.render("Натисніть I щоб закрити", True, (200, 150, 150))
         self.screen.blit(hint, (self.SCREEN_WIDTH // 2 - hint.get_width() // 2, overlay_y + overlay_h - 28))
     
     def draw_full_map(self, game_logic, level_index):
         """Повноекранна карта (клавіша M)"""
-        self.screen.fill((20, 20, 30))
+        self.screen.fill((25, 15, 20))
         
-        title = self.font_big.render(f"КАРТА РІВНЯ {level_index + 1}", True, (255, 255, 255))
+        title = self.font_big.render(f"КАРТА РІВНЯ {level_index + 1}", True, (255, 200, 200))
         self.screen.blit(title, (self.SCREEN_WIDTH // 2 - title.get_width() // 2, 20))
         
         map_height = len(game_logic.level)
@@ -284,13 +279,9 @@ class GameRenderer:
                 elif tile == "@":
                     player_scaled = pygame.transform.scale(self.player_sprites[game_logic.current_direction], (tile_size, tile_size))
                     self.screen.blit(player_scaled, (px, py))
-                
-                # visited overlay removed per request (no blue visited cells)
         
-        hint = self.font_small.render("Натисніть M щоб закрити карту", True, (200, 200, 200))
+        hint = self.font_small.render("Натисніть M щоб закрити карту", True, (255, 180, 180))
         self.screen.blit(hint, (self.SCREEN_WIDTH // 2 - hint.get_width() // 2, self.SCREEN_HEIGHT - 50))
-        
-        # Legend & visited-count removed per request
     
     def draw_minimap(self, game_logic):
         """Відмальовування міні-карти"""
@@ -305,7 +296,8 @@ class GameRenderer:
         minimap_x = self.SCREEN_WIDTH - minimap_width - 10
         minimap_y = 10
         
-        pygame.draw.rect(self.screen, (40, 40, 40), (minimap_x - 5, minimap_y - 5, minimap_width + 10, minimap_height + 10), border_radius=5)
+        # Рамка міні-карти - темно-сірий
+        pygame.draw.rect(self.screen, (50, 50, 55), (minimap_x - 5, minimap_y - 5, minimap_width + 10, minimap_height + 10), border_radius=5)
         
         for y, row in enumerate(game_logic.level):
             for x, tile in enumerate(row):
@@ -313,70 +305,72 @@ class GameRenderer:
                 py = minimap_y + y * mini_tile_size
                 
                 if tile == "#":
-                    pygame.draw.rect(self.screen, (100, 100, 100), (px, py, mini_tile_size, mini_tile_size))
+                    # Стіни - темно-сірий
+                    pygame.draw.rect(self.screen, (80, 80, 85), (px, py, mini_tile_size, mini_tile_size))
                 elif tile == "$":
-                    color = (0, 200, 0) if (x, y) in game_logic.goals else (139, 69, 19)
+                    # Ящик на цілі - яскраво-зелений, звичайний ящик - коричневий
+                    color = (50, 200, 50) if (x, y) in game_logic.goals else (139, 90, 43)
                     pygame.draw.rect(self.screen, color, (px, py, mini_tile_size, mini_tile_size))
                 elif tile == "@":
-                    pygame.draw.rect(self.screen, (255, 255, 0), (px, py, mini_tile_size, mini_tile_size))
+                    # Гравець - яскраво-жовтий
+                    pygame.draw.rect(self.screen, (255, 220, 50), (px, py, mini_tile_size, mini_tile_size))
                 elif (x, y) in game_logic.goals:
-                    pygame.draw.rect(self.screen, (50, 50, 150), (px, py, mini_tile_size, mini_tile_size))
+                    # Порожні цілі - блакитний
+                    pygame.draw.rect(self.screen, (80, 120, 200), (px, py, mini_tile_size, mini_tile_size))
     
     def draw_leaderboard(self, levels_count):
         """Відмальовування таблиці лідерів"""
-        self.screen.fill((30, 30, 50))
+        self.screen.fill((35, 20, 25))
         
-        title = self.font_big.render("ТАБЛИЦЯ ЛІДЕРІВ", True, (255, 255, 255))
-        # Move title down so it doesn't overlap the back button
+        title = self.font_big.render("ТАБЛИЦЯ ЛІДЕРІВ", True, (255, 200, 200))
         self.screen.blit(title, (self.SCREEN_WIDTH//2 - title.get_width()//2, 60))
 
-        # Start listing leaderboard entries below the title
         y_offset = 140
         for level_num in range(1, levels_count + 1):
-            level_title = self.font.render(f"Рівень {level_num}:", True, (255, 200, 100))
+            level_title = self.font.render(f"Рівень {level_num}:", True, (255, 180, 120))
             self.screen.blit(level_title, (50, y_offset))
             y_offset += 40
             
             leaderboard = get_leaderboard(level_num)
             if leaderboard:
                 for idx, (username, steps) in enumerate(leaderboard[:3], 1):
-                    entry_text = self.font_tiny.render(f"{idx}. {username} - {steps} кроків", True, (200, 200, 200))
+                    entry_text = self.font_tiny.render(f"{idx}. {username} - {steps} кроків", True, (255, 200, 200))
                     self.screen.blit(entry_text, (70, y_offset))
                     y_offset += 22
             else:
-                no_data = self.font_tiny.render("Немає даних", True, (150, 150, 150))
+                no_data = self.font_tiny.render("Немає даних", True, (180, 120, 120))
                 self.screen.blit(no_data, (70, y_offset))
                 y_offset += 22
             
             y_offset += 15
         
         back_btn = pygame.Rect(20, 20, 100, 40)
-        pygame.draw.rect(self.screen, (150, 150, 150), back_btn, border_radius=5)
-        back_text = self.font.render("Назад", True, (0, 0, 0))
+        pygame.draw.rect(self.screen, (140, 50, 50), back_btn, border_radius=5)
+        back_text = self.font.render("Назад", True, (255, 240, 240))
         self.screen.blit(back_text, (back_btn.centerx - back_text.get_width()//2, back_btn.centery - back_text.get_height()//2))
     
     def draw_win_screen(self, level_index, levels_count, steps, has_user):
         """Відмальовування екрана перемоги"""
-        self.screen.fill((20, 20, 20))
+        self.screen.fill((25, 15, 15))
         
         msg = "РІВЕНЬ ПРОЙДЕНО!"
-        win_t = self.font_big.render(msg, True, (0, 255, 0))
+        win_t = self.font_big.render(msg, True, (255, 100, 100))
         self.screen.blit(win_t, (self.SCREEN_WIDTH // 2 - win_t.get_width() // 2, 150))
         
-        steps_text = self.font.render(f"Кроків: {steps}", True, (255, 255, 255))
+        steps_text = self.font.render(f"Кроків: {steps}", True, (255, 220, 220))
         self.screen.blit(steps_text, (self.SCREEN_WIDTH // 2 - steps_text.get_width() // 2, 250))
         
         if has_user:
-            saved_text = self.font_small.render("Результат збережено!", True, (100, 255, 100))
+            saved_text = self.font_small.render("Результат збережено!", True, (255, 150, 150))
             self.screen.blit(saved_text, (self.SCREEN_WIDTH // 2 - saved_text.get_width() // 2, 290))
         
         btn_next = pygame.Rect(250, 350, 300, 60)
-        pygame.draw.rect(self.screen, (50, 180, 50), btn_next, border_radius=10)
+        pygame.draw.rect(self.screen, (180, 60, 60), btn_next, border_radius=10)
         next_text = "Наступний рівень" if level_index < levels_count - 1 else "Завершити"
-        t_next = self.font.render(next_text, True, (255, 255, 255))
+        t_next = self.font.render(next_text, True, (255, 240, 240))
         self.screen.blit(t_next, (btn_next.centerx - t_next.get_width()//2, btn_next.centery - t_next.get_height()//2))
         
         btn_menu = pygame.Rect(250, 430, 300, 60)
-        pygame.draw.rect(self.screen, (100, 100, 180), btn_menu, border_radius=10)
-        menu_text = self.font.render("В меню", True, (255, 255, 255))
+        pygame.draw.rect(self.screen, (160, 70, 70), btn_menu, border_radius=10)
+        menu_text = self.font.render("В меню", True, (255, 240, 240))
         self.screen.blit(menu_text, (btn_menu.centerx - menu_text.get_width()//2, btn_menu.centery - menu_text.get_height()//2))

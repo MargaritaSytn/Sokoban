@@ -1,9 +1,9 @@
-Кроків: 34
+Кроків: 38
 Напрямок: left
 Позиція гравця: 2,2
 Відвідано клітин: 18
 Цілей: 2
-Дані гравця: {'class': 'AdvancedPlayer', 'x': 3, 'y': 5, 'name': 'Герой', 'score': 340, 'moves': 0, 'direction': 'down'}
+Дані гравця: {'class': 'AdvancedPlayer', 'x': 3, 'y': 5, 'name': 'Герой', 'score': 380, 'moves': 0, 'direction': 'down'}
 Рівень:
 ######
 #    #

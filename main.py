@@ -29,6 +29,7 @@ else:
 game_state = "menu"
 levels_list = ["level1.txt", "level2.txt", "level3.txt", "level4.txt", "level5.txt"]
 current_level_index = 0
+preview_origin = None
 
 show_deadlocks = False
 show_statistics = False
@@ -65,6 +66,10 @@ while running:
                     game_logic.reset_level(levels_list[0])
                     current_level_index = 0
                     game_state = "preview"
+                    preview_origin = "menu"
+                    # clear held movement to avoid accidental moves in preview
+                    move_hold = {"up": False, "down": False, "left": False, "right": False}
+                    last_move_tick = pygame.time.get_ticks()
                 elif pygame.Rect(300, 280, 200, 60).collidepoint(mx, my):
                     game_state = "levels"
                 elif pygame.Rect(300, 360, 200, 60).collidepoint(mx, my):
@@ -79,6 +84,9 @@ while running:
                         game_logic.reset_level(levels_list[i])
                         current_level_index = i
                         game_state = "preview"
+                        preview_origin = "levels"
+                        move_hold = {"up": False, "down": False, "left": False, "right": False}
+                        last_move_tick = pygame.time.get_ticks()
                 if pygame.Rect(20, 20, 100, 40).collidepoint(mx, my):
                     game_state = "menu"
                     
@@ -88,8 +96,16 @@ while running:
                     show_deadlocks = False
                     show_statistics = False
                     show_full_map = False
+                    # entering the actual game: ensure no movement is held
+                    move_hold = {"up": False, "down": False, "left": False, "right": False}
+                    last_move_tick = pygame.time.get_ticks()
                 elif pygame.Rect(20, 20, 100, 40).collidepoint(mx, my):
-                    game_state = "menu"
+                    # return to where preview was opened from
+                    if preview_origin == "levels":
+                        game_state = "levels"
+                    else:
+                        game_state = "menu"
+                    preview_origin = None
                     
             elif game_state == "game":
                 if pygame.Rect(10, 60, 80, 35).collidepoint(mx, my):
@@ -100,6 +116,9 @@ while running:
                     game_logic.reset_level(levels_list[current_level_index])
                     show_deadlocks = False
                     show_statistics = False
+                    # clear held movement after a reset
+                    move_hold = {"up": False, "down": False, "left": False, "right": False}
+                    last_move_tick = pygame.time.get_ticks()
                 elif pygame.Rect(100, 105, 80, 35).collidepoint(mx, my):
                     game_state = "menu"
                     show_deadlocks = False
@@ -112,6 +131,9 @@ while running:
                         current_level_index += 1
                         game_logic.reset_level(levels_list[current_level_index])
                         game_state = "preview"
+                        preview_origin = "levels"
+                        move_hold = {"up": False, "down": False, "left": False, "right": False}
+                        last_move_tick = pygame.time.get_ticks()
                     else:
                         game_state = "menu"
                 elif pygame.Rect(250, 430, 300, 60).collidepoint(mx, my):

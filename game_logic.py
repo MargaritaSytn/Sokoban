@@ -178,8 +178,6 @@ class GameLogic:
     ) -> dict:
         """
         Отримання статистики рівня
-        4a. optional (keyword) parameters
-        4b. * у параметрах (keyword-only)
         """
         stats = {
             "boxes_count": len(self.boxes), 
@@ -224,14 +222,12 @@ class GameLogic:
     ) -> bool:
         """
         Перевірка меж рівня
-        4b. / у параметрах (positional-only)
         """
         return 0 <= x < width and 0 <= y < height
     
     def find_deadlocks(self):
         """
         Пошук тупикових ситуацій (ящик у куті без цілі)
-        Використовує: 3d. continue, 3e. break, 3f. else у циклі
         """
         deadlocked_boxes = []
         
@@ -348,7 +344,7 @@ class GameLogic:
         )
     
     def print_player_info(self):
-        """Вивести інформацію про гравця (використовує __str__)"""
+        """Вивести інформацію про гравця"""
         if self.player_obj:
             print(self.player_obj) 
 
