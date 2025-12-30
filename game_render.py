@@ -2,7 +2,7 @@ import pygame
 from database import get_leaderboard
 
 class GameRenderer:
-    """Клас для відмальовування гри"""
+    # Клас для відмальовування гри
     def __init__(self, screen, tile_size):
         self.screen = screen
         self.TILE_SIZE = tile_size
@@ -27,7 +27,7 @@ class GameRenderer:
         self.goal_img = self.load_img("images/enviroment/environment_02.png")
     
     def load_img(self, path):
-        """Завантаження зображення"""
+        # Завантаження зображення
         try:
             return pygame.image.load(path).convert_alpha()
         except:
@@ -36,7 +36,7 @@ class GameRenderer:
             return surf
     
     def draw_menu(self, username):
-        """Відмальовування головного меню"""
+        # Відмальовування головного меню
         self.screen.fill((40, 20, 20))
         
         title = self.font_big.render("SOKOBAN", True, (255, 200, 200))
@@ -52,7 +52,7 @@ class GameRenderer:
             self.screen.blit(st, (rect.centerx - st.get_width()//2, rect.centery - st.get_height()//2))
     
     def draw_levels_menu(self, levels_count):
-        """Відмальовування меню вибору рівнів"""
+        # Відмальовування меню вибору рівнів
         self.screen.fill((40, 20, 20))
         
         title = self.font_big.render("ВИБІР РІВНЯ", True, (255, 200, 200))
@@ -70,7 +70,7 @@ class GameRenderer:
         self.screen.blit(back_text, (back_btn.centerx - back_text.get_width()//2, back_btn.centery - back_text.get_height()//2))
     
     def draw_preview(self, game_logic, level_index):
-        """Відмальовування прев'ю рівня"""
+        # Відмальовування прев'ю рівня
         self.screen.fill((30, 15, 15))
         
         back_btn = pygame.Rect(20, 20, 100, 40)
@@ -122,7 +122,7 @@ class GameRenderer:
         self.screen.blit(start_text, (btn_start.centerx - start_text.get_width()//2, btn_start.centery - start_text.get_height()//2))
     
     def draw_game(self, game_logic, level_index, deadlocks=None, show_stats=False, global_stats=None):
-        """Відмальовування ігрового процесу"""
+        # Відмальовування ігрового процесу
         self.screen.fill((35, 20, 20))
         
         cam_x = game_logic.player_x * self.TILE_SIZE - self.SCREEN_WIDTH // 2 + self.TILE_SIZE // 2
@@ -159,7 +159,7 @@ class GameRenderer:
             self.draw_statistics_overlay(game_logic, global_stats)
     
     def draw_control_buttons(self, game_logic):
-        """Відмальовування кнопок керування"""
+        # Відмальовування кнопок керування
         btn_undo = pygame.Rect(10, 60, 80, 35)
         btn_redo = pygame.Rect(100, 60, 80, 35)
         btn_reset = pygame.Rect(10, 105, 80, 35)
@@ -201,7 +201,7 @@ class GameRenderer:
             self.screen.blit(text, (10, y_start + i * 20))
     
     def draw_statistics_overlay(self, game_logic, global_stats):
-        """Оверлей зі статистикою"""
+        # Оверлей зі статистикою
         overlay_w, overlay_h = 360, 180
         overlay = pygame.Surface((overlay_w, overlay_h))
         overlay.set_alpha(230)
@@ -237,7 +237,7 @@ class GameRenderer:
         self.screen.blit(hint, (self.SCREEN_WIDTH // 2 - hint.get_width() // 2, overlay_y + overlay_h - 28))
     
     def draw_full_map(self, game_logic, level_index):
-        """Повноекранна карта (клавіша M)"""
+        # Повноекранна карта (клавіша M)
         self.screen.fill((25, 15, 20))
         
         title = self.font_big.render(f"КАРТА РІВНЯ {level_index + 1}", True, (255, 200, 200))
@@ -284,7 +284,7 @@ class GameRenderer:
         self.screen.blit(hint, (self.SCREEN_WIDTH // 2 - hint.get_width() // 2, self.SCREEN_HEIGHT - 50))
     
     def draw_minimap(self, game_logic):
-        """Відмальовування міні-карти"""
+        # Відмальовування міні-карти
         map_height = len(game_logic.level)
         map_width = max(len(row) for row in game_logic.level) if game_logic.level else 0
         minimap_max_size = 150
@@ -319,7 +319,7 @@ class GameRenderer:
                     pygame.draw.rect(self.screen, (80, 120, 200), (px, py, mini_tile_size, mini_tile_size))
     
     def draw_leaderboard(self, levels_count):
-        """Відмальовування таблиці лідерів"""
+        # Відмальовування таблиці лідерів
         self.screen.fill((35, 20, 25))
         
         title = self.font_big.render("ТАБЛИЦЯ ЛІДЕРІВ", True, (255, 200, 200))
@@ -350,7 +350,7 @@ class GameRenderer:
         self.screen.blit(back_text, (back_btn.centerx - back_text.get_width()//2, back_btn.centery - back_text.get_height()//2))
     
     def draw_win_screen(self, level_index, levels_count, steps, has_user):
-        """Відмальовування екрана перемоги"""
+    # Відмальовування екрана перемоги
         self.screen.fill((25, 15, 15))
         
         msg = "РІВЕНЬ ПРОЙДЕНО!"

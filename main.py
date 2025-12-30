@@ -96,11 +96,9 @@ while running:
                     show_deadlocks = False
                     show_statistics = False
                     show_full_map = False
-                    # entering the actual game: ensure no movement is held
                     move_hold = {"up": False, "down": False, "left": False, "right": False}
                     last_move_tick = pygame.time.get_ticks()
                 elif pygame.Rect(20, 20, 100, 40).collidepoint(mx, my):
-                    # return to where preview was opened from
                     if preview_origin == "levels":
                         game_state = "levels"
                     else:
@@ -144,7 +142,6 @@ while running:
                     game_state = "menu"
 
         if game_state == "game" and event.type == pygame.KEYDOWN:
-            # movement keys: set hold flags and perform initial step (unless full map open)
             if event.key in [pygame.K_w, pygame.K_UP]:
                 move_hold["up"] = True
                 if not show_full_map:
@@ -256,7 +253,6 @@ while running:
                 msg_surf = renderer.font_small.render(save_message, True, (100, 255, 100))
                 screen.blit(msg_surf, (SCREEN_WIDTH // 2 - msg_surf.get_width() // 2, 100))
 
-        # handle movement repeat when holding keys
         if game_state == "game" and not show_full_map:
             now = pygame.time.get_ticks()
             if now - last_move_tick >= MOVE_REPEAT_MS:

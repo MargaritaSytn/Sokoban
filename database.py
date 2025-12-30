@@ -2,7 +2,7 @@ import sqlite3
 import hashlib
 
 def init_database():
-    """Ініціалізація бази даних"""
+    # Ініціалізація бази даних
     conn = sqlite3.connect('sokoban.db')
     cursor = conn.cursor()
     
@@ -25,11 +25,11 @@ def init_database():
     conn.close()
 
 def hash_password(password):
-    """Хешування пароля"""
+    # Хешування пароля
     return hashlib.sha256(password.encode()).hexdigest()
 
 def register_user(username, password):
-    """Реєстрація нового користувача"""
+    # Реєстрація нового користувача
     try:
         conn = sqlite3.connect('sokoban.db')
         cursor = conn.cursor()
@@ -44,7 +44,7 @@ def register_user(username, password):
         return False, f"Помилка: {str(e)}"
 
 def login_user(username, password):
-    """Авторизація користувача"""
+    # Авторизація користувача
     conn = sqlite3.connect('sokoban.db')
     cursor = conn.cursor()
     cursor.execute("SELECT id, password FROM users WHERE username = ?", (username,))
@@ -56,7 +56,7 @@ def login_user(username, password):
     return False, None
 
 def save_score(user_id, level, steps):
-    """Збереження результату гри"""
+    # Збереження результату гри
     conn = sqlite3.connect('sokoban.db')
     cursor = conn.cursor()
     
@@ -73,7 +73,7 @@ def save_score(user_id, level, steps):
     conn.close()
 
 def get_leaderboard(level):
-    """Отримання таблиці лідерів для рівня"""
+    # Отримання таблиці лідерів для рівня
     conn = sqlite3.connect('sokoban.db')
     cursor = conn.cursor()
     cursor.execute('''

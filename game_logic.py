@@ -15,7 +15,7 @@ def log_call(func):
     return wrapper
 
 class GameLogic:
-    """Клас для керування ігровою логікою"""
+    # Клас для керування ігровою логікою
     
     def __init__(self):
         self.level = []
@@ -40,7 +40,7 @@ class GameLogic:
         return f"GameLogic(кроків={self.steps_count}, ящиків={len(self.boxes)}, цілей={len(self.goals)})"
     
     def load_level_data(self, filename):
-        """Завантаження рівня з файлу"""
+        # Завантаження рівня з файлу
         path = f"levels/{filename}"
         if not os.path.exists(path):
             return [["#"]*15 for _ in range(15)]
@@ -48,7 +48,7 @@ class GameLogic:
             return [list(line.rstrip("\n")) for line in f]
     
     def save_state(self):
-        """Збереження поточного стану в історію"""
+        # Збереження поточного стану в історію
         state = {
             "level": [row[:] for row in self.level],
             "player_pos": (self.player_x, self.player_y),
@@ -60,7 +60,7 @@ class GameLogic:
         self.history_index += 1
     
     def undo(self):
-        """Відкат на крок назад"""
+        # Відкат на крок назад
         if self.history_index > 0:
             self.history_index -= 1
             state = self.history[self.history_index]
@@ -75,7 +75,7 @@ class GameLogic:
                 self.player_obj.direction = self.current_direction
     
     def redo(self):
-        """Відкат уперед"""
+        # Відкат уперед
         if self.history_index < len(self.history) - 1:
             self.history_index += 1
             state = self.history[self.history_index]
@@ -90,7 +90,7 @@ class GameLogic:
                 self.player_obj.direction = self.current_direction
     
     def reset_level(self, level_filename):
-        """Скидання рівня"""
+        # Скидання рівня
         global total_games_played 
         total_games_played += 1
         
@@ -126,7 +126,7 @@ class GameLogic:
 
     @log_call
     def move_player(self, dx: int, dy: int, direction: str) -> None:
-        """Переміщення гравця (Основне завдання)"""
+        # Переміщення гравця (Основне завдання)
         global total_steps_made
         self.current_direction = direction
         
@@ -176,9 +176,7 @@ class GameLogic:
         show_details: bool = True,
         max_steps: int = 1000
     ) -> dict:
-        """
-        Отримання статистики рівня
-        """
+        # Отримання статистики рівня
         stats = {
             "boxes_count": len(self.boxes), 
             "goals_count": len(self.goals),
@@ -192,11 +190,11 @@ class GameLogic:
             stats["player_name"] = self.player_obj.name
         
         def calculate_efficiency():
-            """Вкладена функція для розрахунку ефективності"""
+        # Вкладена функція для розрахунку ефективності
             efficiency_score = 0
             
             def update_score(points):
-                """Ще одна вкладена функція"""
+            # Ще одна вкладена функція
                 nonlocal efficiency_score 
                 efficiency_score += points
             
@@ -220,15 +218,11 @@ class GameLogic:
         width: int,
         height: int
     ) -> bool:
-        """
-        Перевірка меж рівня
-        """
+        # Перевірка меж рівня
         return 0 <= x < width and 0 <= y < height
     
     def find_deadlocks(self):
-        """
-        Пошук тупикових ситуацій (ящик у куті без цілі)
-        """
+        # Пошук тупикових ситуацій (ящик у куті без цілі)
         deadlocked_boxes = []
         
         for y in range(len(self.level)):
@@ -261,12 +255,12 @@ class GameLogic:
         return deadlocked_boxes
     
     def check_win(self) -> bool:
-        """Перевірка перемоги"""
+        # Перевірка перемоги
         boxes_positions = {(x, y) for y, row in enumerate(self.level) for x, tile in enumerate(row) if tile == "$"}
         return boxes_positions == self.goals
     
     def save_progress_to_text(self, filename="progress.txt"):
-        """Збереження прогресу в текстовий файл"""
+        # Збереження прогресу в текстовий файл
         with open(filename, "w", encoding="utf-8") as f:
             f.write(f"Кроків: {self.steps_count}\n")
             f.write(f"Напрямок: {self.current_direction}\n")
@@ -282,13 +276,13 @@ class GameLogic:
                 f.write("".join(row) + "\n")
     
     def export_level_to_text(self, filename):
-        """Експорт рівня в текстовий файл"""
+        # Експорт рівня в текстовий файл
         with open(filename, "w", encoding="utf-8") as f:
             for row in self.level:
                 f.write("".join(row) + "\n")
     
     def save_state_to_binary(self, filename="gamestate.bin"):
-        """Збереження повного стану гри в бінарний файл"""
+        # Збереження повного стану гри в бінарний файл
         state = {
             "level": self.level,
             "goals": self.goals,
@@ -305,7 +299,7 @@ class GameLogic:
             pickle.dump(state, f)
     
     def load_state_from_binary(self, filename="gamestate.bin"):
-        """Завантаження стану гри з бінарного файлу"""
+        # Завантаження стану гри з бінарного файлу
         if not os.path.exists(filename):
             return False
         try:
@@ -337,19 +331,19 @@ class GameLogic:
             return False
     
     def get_sorted_boxes(self):
-        """Отримати відсортований список ящиків"""
+        # Отримати відсортований список ящиків
         return sorted(
             (box for box in self.boxes.iter_objects()),
             key=lambda b: (b.y, b.x)
         )
     
     def print_player_info(self):
-        """Вивести інформацію про гравця"""
+        # Вивести інформацію про гравця
         if self.player_obj:
             print(self.player_obj) 
 
 def get_global_statistics():
-    """Отримання глобальної статистики"""
+    # Отримання глобальної статистики
     global total_games_played, total_steps_made
     return {
         "games_played": total_games_played,
@@ -358,7 +352,7 @@ def get_global_statistics():
     }
 
 def reset_global_statistics():
-    """Скидання глобальної статистики"""
+    # Скидання глобальної статистики
     global total_games_played, total_steps_made
     total_games_played = 0
     total_steps_made = 0
