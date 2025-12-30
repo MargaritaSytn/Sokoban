@@ -2,14 +2,14 @@ from tkinter import Tk, Label, Entry, Button, messagebox, Toplevel
 from database import login_user, register_user
 
 class LoginWindow:
-    """Вікно входу та реєстрації"""
+    # Вікно входу та реєстрації
     def __init__(self):
         self.result = None
         self.user_id = None
         self.username = None
         
     def show_login(self):
-        """Показати вікно входу"""
+        # Показати вікно входу
         root = Tk()
         root.title("Вхід у Sokoban")
         root.geometry("300x200")

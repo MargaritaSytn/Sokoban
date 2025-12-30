@@ -190,11 +190,9 @@ class GameLogic:
             stats["player_name"] = self.player_obj.name
         
         def calculate_efficiency():
-        # Вкладена функція для розрахунку ефективності
             efficiency_score = 0
             
             def update_score(points):
-            # Ще одна вкладена функція
                 nonlocal efficiency_score 
                 efficiency_score += points
             
