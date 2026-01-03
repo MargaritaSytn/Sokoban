@@ -12,10 +12,12 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Sokoban")
 
+# Підготовка гри. Ініціалізація бази даних, створення об’єкта логіки гри, створення об’єкта для малювання
 init_database()
 game_logic = GameLogic()
 renderer = GameRenderer(screen, TILE_SIZE)
 
+# Вхід користувача
 login_window = LoginWindow()
 logged_in, user_id, username = login_window.show_login()
 
@@ -26,19 +28,18 @@ else:
     current_user_id = None
     current_username = "Гість"
 
+# Скидання глобальної статистики при новому запуску гри
 game_state = "menu"
 levels_list = ["level1.txt", "level2.txt", "level3.txt", "level4.txt", "level5.txt"]
 current_level_index = 0
 preview_origin = None
 
-show_deadlocks = False
 show_statistics = False
 show_full_map = False
 current_deadlocks = None
 save_message = ""
 save_message_timer = 0
 
-# movement-on-hold settings (milliseconds)
 MOVE_REPEAT_MS = 200
 move_hold = {"up": False, "down": False, "left": False, "right": False}
 last_move_tick = 0
@@ -50,7 +51,8 @@ clock = pygame.time.Clock()
 
 while running:
     mx, my = pygame.mouse.get_pos()
-    
+
+    # Таймер повідомлення про збереження 
     if save_message_timer > 0:
         save_message_timer -= 1
         if save_message_timer == 0:
@@ -67,7 +69,6 @@ while running:
                     current_level_index = 0
                     game_state = "preview"
                     preview_origin = "menu"
-                    # clear held movement to avoid accidental moves in preview
                     move_hold = {"up": False, "down": False, "left": False, "right": False}
                     last_move_tick = pygame.time.get_ticks()
                 elif pygame.Rect(300, 280, 200, 60).collidepoint(mx, my):
@@ -177,21 +178,12 @@ while running:
             elif event.key == pygame.K_y and pygame.key.get_mods() & pygame.KMOD_CTRL:
                 game_logic.redo()
 
-            elif event.key == pygame.K_h:
-                # keep existing deadlock toggle behavior
-                show_deadlocks = not show_deadlocks
-                if show_deadlocks:
-                    current_deadlocks = game_logic.find_deadlocks()
-                else:
-                    current_deadlocks = None
-
             elif event.key == pygame.K_i: 
                 show_statistics = not show_statistics
 
             elif event.key == pygame.K_m:
                 show_full_map = not show_full_map
                 if show_full_map:
-                    # when opening the full map, make the player face down
                     game_logic.current_direction = "down"
                     if getattr(game_logic, 'player_obj', None):
                         try:
@@ -220,7 +212,7 @@ while running:
                 show_deadlocks = False
                 show_statistics = False
                 show_full_map = False
-        # KEYUP handling to stop movement-on-hold
+                
         if event.type == pygame.KEYUP and game_state == "game":
             if event.key in [pygame.K_w, pygame.K_UP]:
                 move_hold["up"] = False

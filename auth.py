@@ -9,23 +9,29 @@ class LoginWindow:
         self.username = None
         
     def show_login(self):
-        # Показати вікно входу
+        # створює вікно входу, запускає Tkinter, блокує гру, поки користувач не увійде або не закриє вікно
+        # Створення головного вікна
         root = Tk()
         root.title("Вхід у Sokoban")
         root.geometry("300x200")
         root.resizable(False, False)
         
+        # Поле для логіна
         Label(root, text="Логін:").pack(pady=5)
         entry_user = Entry(root)
         entry_user.pack(pady=5)
         
+        # Поле для пароля
         Label(root, text="Пароль:").pack(pady=5)
         entry_pass = Entry(root, show="*")
         entry_pass.pack(pady=5)
         
+        # Викликається при натисканні кнопки «Увійти»
         def on_login():
+            # Отримання даних
             username = entry_user.get()
             password = entry_pass.get()
+            # Перевірка в базі даних
             success, user_id = login_user(username, password)
             if success:
                 self.result = True
@@ -35,7 +41,10 @@ class LoginWindow:
             else:
                 messagebox.showerror("Помилка", "Невірний логін або пароль!")
         
+        # Викликається при натисканні кнопки «Реєстрація»
         def on_register():
+
+            # Відкриття вікна реєстрації
             reg_window = Toplevel(root)
             reg_window.title("Реєстрація")
             reg_window.geometry("300x200")
@@ -48,6 +57,7 @@ class LoginWindow:
             reg_pass = Entry(reg_window, show="*")
             reg_pass.pack(pady=5)
             
+            # Функція реєстрації
             def do_register():
                 username = reg_user.get()
                 password = reg_pass.get()

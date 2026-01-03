@@ -186,6 +186,7 @@ class GameRenderer:
         pygame.draw.rect(self.screen, (180, 50, 50), btn_exit, border_radius=5)
         exit_text = self.font_small.render("Exit", True, (255, 240, 240))
         self.screen.blit(exit_text, (btn_exit.centerx - exit_text.get_width()//2, btn_exit.centery - exit_text.get_height()//2))
+    
     def draw_key_hints(self):
         """Підказки по клавішах"""
         hints = [

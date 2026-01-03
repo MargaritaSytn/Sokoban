@@ -2,7 +2,7 @@ import os
 import pickle
 from game_entities import (
     AdvancedPlayer, AdvancedBox, Goal, Wall, 
-    GameObjectCollection, SerializableMixin
+    GameObjectCollection,
 )
 
 total_games_played = 0
@@ -32,12 +32,6 @@ class GameLogic:
         self.boxes = GameObjectCollection() 
         self.goals_obj = GameObjectCollection()  
         self.walls = GameObjectCollection()  
-    
-    def __str__(self):
-        return f"GameLogic(кроків={self.steps_count}, гравець=({self.player_x}, {self.player_y}))"
-    
-    def __repr__(self):
-        return f"GameLogic(кроків={self.steps_count}, ящиків={len(self.boxes)}, цілей={len(self.goals)})"
     
     def load_level_data(self, filename):
         # Завантаження рівня з файлу
@@ -170,88 +164,6 @@ class GameLogic:
                 self.player_obj += 10
             self.save_state()
     
-    def get_level_statistics(
-        self,
-        *,
-        show_details: bool = True,
-        max_steps: int = 1000
-    ) -> dict:
-        # Отримання статистики рівня
-        stats = {
-            "boxes_count": len(self.boxes), 
-            "goals_count": len(self.goals),
-            "current_steps": self.steps_count,
-            "steps_remaining": max_steps - self.steps_count if max_steps > self.steps_count else 0,
-            "visited_cells": len(self.visited_positions) 
-        }
-        
-        if self.player_obj:
-            stats["player_score"] = self.player_obj.score
-            stats["player_name"] = self.player_obj.name
-        
-        def calculate_efficiency():
-            efficiency_score = 0
-            
-            def update_score(points):
-                nonlocal efficiency_score 
-                efficiency_score += points
-            
-            if stats["current_steps"] > 0:
-                update_score(100)
-                if stats["current_steps"] < 50:
-                    update_score(50) 
-            
-            return efficiency_score
-        
-        if show_details:
-            stats["efficiency"] = calculate_efficiency()
-        
-        return stats
-    
-    def validate_level_bounds(
-        self,
-        x: int,
-        y: int,
-        /,
-        width: int,
-        height: int
-    ) -> bool:
-        # Перевірка меж рівня
-        return 0 <= x < width and 0 <= y < height
-    
-    def find_deadlocks(self):
-        # Пошук тупикових ситуацій (ящик у куті без цілі)
-        deadlocked_boxes = []
-        
-        for y in range(len(self.level)):
-            for x in range(len(self.level[0]) if self.level else 0):
-                tile = self.level[y][x]
-                
-                if tile != "$":
-                    continue
-                
-                if (x, y) in self.goals:
-                    continue
-                
-                walls_count = 0
-                
-                for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
-                    nx, ny = x + dx, y + dy
-                    if 0 <= nx < len(self.level[0]) and 0 <= ny < len(self.level):
-                        if self.level[ny][nx] == "#":
-                            walls_count += 1
-                            if walls_count >= 2:
-                                deadlocked_boxes.append((x, y))
-                                break  
-                    
-                    if walls_count >= 2:
-                        break
-                
-        else:
-            return deadlocked_boxes
-        
-        return deadlocked_boxes
-    
     def check_win(self) -> bool:
         # Перевірка перемоги
         boxes_positions = {(x, y) for y, row in enumerate(self.level) for x, tile in enumerate(row) if tile == "$"}
@@ -270,12 +182,6 @@ class GameLogic:
                 f.write(f"Дані гравця: {self.player_obj.to_dict()}\n")
             
             f.write("Рівень:\n")
-            for row in self.level:
-                f.write("".join(row) + "\n")
-    
-    def export_level_to_text(self, filename):
-        # Експорт рівня в текстовий файл
-        with open(filename, "w", encoding="utf-8") as f:
             for row in self.level:
                 f.write("".join(row) + "\n")
     
@@ -327,18 +233,6 @@ class GameLogic:
             return True
         except:
             return False
-    
-    def get_sorted_boxes(self):
-        # Отримати відсортований список ящиків
-        return sorted(
-            (box for box in self.boxes.iter_objects()),
-            key=lambda b: (b.y, b.x)
-        )
-    
-    def print_player_info(self):
-        # Вивести інформацію про гравця
-        if self.player_obj:
-            print(self.player_obj) 
 
 def get_global_statistics():
     # Отримання глобальної статистики

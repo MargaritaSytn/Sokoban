@@ -3,7 +3,7 @@
 Позиція гравця: 2,2
 Відвідано клітин: 18
 Цілей: 2
-Дані гравця: {'class': 'AdvancedPlayer', 'x': 3, 'y': 2, 'name': 'Герой', 'score': 350, 'moves': 0, 'direction': 'left'}
+Дані гравця: {'class': 'AdvancedPlayer', 'x': 3, 'y': 5, 'name': 'Герой', 'score': 360, 'moves': 0, 'direction': 'right'}
 Рівень:
 ######
 #    #

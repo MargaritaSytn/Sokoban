@@ -38,33 +38,11 @@ class GameObject:
     # Позиція як кортеж
         return (self._x, self._y)
     
-    def __str__(self):
-    # Рядкове представлення об'єкта
-        return f"{self.__class__.__name__}({self._x}, {self._y})"
-    
-    def __repr__(self):
-    # Представлення для налагодження
-        return f"{self.__class__.__name__}(x={self._x}, y={self._y}, symbol='{self._symbol}')"
-    
     def __eq__(self, other):
     # Порівняння двох об'єктів
         if not isinstance(other, GameObject):
             return False
         return self._x == other._x and self._y == other._y
-    
-    def __hash__(self):
-    # Хеш для використання у множинах та словниках
-        return hash((self._x, self._y, self._symbol))
-    
-    def can_move_to(self, level, new_x, new_y):
-    # Чи може об'єкт переміститися на нову позицію
-        return True
-    
-    def iter_objects(self):
-    # Генератор об'єктів колекції
-        for obj in self._objects:
-            yield obj
-
 
 class Player(GameObject):
     # Клас гравця
@@ -97,12 +75,9 @@ class Player(GameObject):
         self._direction = direction
         self._moves_count += 1
     
-    def reset_moves(self):
-        # Скидання лічильника ходів
-        self._moves_count = 0
-    
-    def __str__(self):
-        return f"Гравець у ({self._x}, {self._y}), дивиться {self._direction}, ходів: {self._moves_count}"
+    # def reset_moves(self):
+    #     # Скидання лічильника ходів
+    #     self._moves_count = 0
 
 
 class Box(GameObject):
@@ -125,10 +100,6 @@ class Box(GameObject):
         # Штовхнути ящик
         self._x += dx
         self._y += dy
-    
-    def __str__(self):
-        status = "на цілі" if self._on_goal else "не на цілі"
-        return f"Ящик у ({self._x}, {self._y}), {status}"
 
 
 class Goal(GameObject):
@@ -146,10 +117,6 @@ class Goal(GameObject):
     @occupied.setter
     def occupied(self, value):
         self._occupied = bool(value)
-    
-    def __str__(self):
-        status = "зайнята" if self._occupied else "порожня"
-        return f"Ціль у ({self._x}, {self._y}), {status}"
 
 
 class Wall(GameObject):
@@ -157,11 +124,6 @@ class Wall(GameObject):
     
     def __init__(self, x, y):
         super().__init__(x, y, "#")
-    
-    def can_move_to(self, level, new_x, new_y):
-        # Через стіну не можна пройти
-        return False
-
 
 class SerializableMixin:
     # Міксин для серіалізації об'єкта
@@ -216,8 +178,8 @@ class AdvancedPlayer(Player, SerializableMixin, ComparableMixin):
     def add_score(self, points):
         self._score += points
     
-    def __str__(self):
-        return f"{self._name} у ({self._x}, {self._y}), рахунок: {self._score}, ходів: {self._moves_count}"
+    # def __str__(self):
+    #     return f"{self._name} у ({self._x}, {self._y}), рахунок: {self._score}, ходів: {self._moves_count}"
     
     def __add__(self, points):
         self._score += points
@@ -298,9 +260,6 @@ class GameObjectCollection:
     def __contains__(self, obj):
         # Перевірка наявності об'єкта
         return obj in self._objects
-    
-    def __str__(self):
-        return f"GameObjectCollection({len(self._objects)} об'єктів)"
     
     def __repr__(self):
         return f"GameObjectCollection({self._objects})"
