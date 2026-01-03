@@ -8,6 +8,7 @@ from game_entities import (
 total_games_played = 0
 total_steps_made = 0
 
+# Декоратор для логування викликів функцій
 def log_call(func):
     def wrapper(*args, **kwargs):
         print(f"[LOG] Виклик: {func.__name__}")
@@ -36,6 +37,7 @@ class GameLogic:
     def load_level_data(self, filename):
         # Завантаження рівня з файлу
         path = f"levels/{filename}"
+        # Якщо файл не знайдено — повертає порожню карту 15x15 зі стінами
         if not os.path.exists(path):
             return [["#"]*15 for _ in range(15)]
         with open(path, "r", encoding="utf-8") as f:
@@ -49,6 +51,7 @@ class GameLogic:
             "direction": self.current_direction,
             "steps": self.steps_count
         }
+        # Історія обмежується поточним станом щоб після undo не залишалося “старих” наступних станів
         self.history = self.history[:self.history_index + 1]
         self.history.append(state)
         self.history_index += 1
@@ -168,22 +171,6 @@ class GameLogic:
         # Перевірка перемоги
         boxes_positions = {(x, y) for y, row in enumerate(self.level) for x, tile in enumerate(row) if tile == "$"}
         return boxes_positions == self.goals
-    
-    def save_progress_to_text(self, filename="progress.txt"):
-        # Збереження прогресу в текстовий файл
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(f"Кроків: {self.steps_count}\n")
-            f.write(f"Напрямок: {self.current_direction}\n")
-            f.write(f"Позиція гравця: {self.player_x},{self.player_y}\n")
-            f.write(f"Відвідано клітин: {len(self.visited_positions)}\n")
-            f.write(f"Цілей: {len(self.goals)}\n")
-            
-            if self.player_obj:
-                f.write(f"Дані гравця: {self.player_obj.to_dict()}\n")
-            
-            f.write("Рівень:\n")
-            for row in self.level:
-                f.write("".join(row) + "\n")
     
     def save_state_to_binary(self, filename="gamestate.bin"):
         # Збереження повного стану гри в бінарний файл

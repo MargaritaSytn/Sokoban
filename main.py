@@ -207,7 +207,6 @@ while running:
             if game_logic.check_win():
                 if current_user_id:
                     save_score(current_user_id, current_level_index + 1, game_logic.steps_count)
-                game_logic.save_progress_to_text(f"win_level{current_level_index+1}.txt")
                 game_state = "win"
                 show_deadlocks = False
                 show_statistics = False
