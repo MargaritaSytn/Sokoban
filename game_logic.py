@@ -127,19 +127,24 @@ class GameLogic:
         global total_steps_made
         self.current_direction = direction
         
+        # координати клітинки, куди хочемо піти
         nx, ny = self.player_x + dx, self.player_y + dy
+        # координати клітинки за ящиком, якщо гравець штовхає ящик
         nnx, nny = self.player_x + 2 * dx, self.player_y + 2 * dy
 
+        # Перевірка меж карти
         if 0 <= ny < len(self.level) and 0 <= nx < len(self.level[ny]):
             pass
         else:
             return
    
+        # Визначення цільової клітинки
         target = self.level[ny][nx]
         if target == "#": 
             return
         
         moved = False
+        # 
         if target == "$":
             if 0 <= nny < len(self.level) and 0 <= nnx < len(self.level[nny]):
                 after_box = self.level[nny][nnx]
